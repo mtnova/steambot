@@ -832,6 +832,10 @@ wstring CMD_Nick_f(class SeeBorg* self, const wstring command) {
   return retstr;
 }
 
+wstring CMD_Cake_f (class SeeBorg* self, const wstring command) {
+  return L"*various Mario, Sonic, Megaman, Zelda, Pokemon, Digimon, Yu-Gi-Oh, Starfox, Kirby, Metroid, Final Fantasy VII, Kingdom Hearts, Megaman X, Dragonball Z, Tenchi Muyo, Sailor Moon, Inuyasha, Hamtaro, Outlaw Star, YuYuHashuko, Cardcaptors, G Gundam, Power Rangers, MST3K, Marvel Comics, and DC Comics characters walk in carrying a HUGE cake*";
+}
+
 
 // Main Body
 // ---------------------------------------------------------------------------
