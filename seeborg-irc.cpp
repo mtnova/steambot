@@ -810,6 +810,10 @@ wstring CMD_Learning_f(class SeeBorg* self, const wstring command) {
   return retstr;
 }
 
+wstring CMD_Jerk_f (class SeeBorg* self, const wstring command) {
+  return L"!jerk";
+}
+
 
 // Main Body
 // ---------------------------------------------------------------------------
