@@ -1,0 +1,13 @@
+TODO list for SeeBorg v1.0
+--------------------------
+
+in no particular order:
+ - Implement rest of the PyBorg features
+ - Any form of control over join invites behaviour
+ - Better CTCP replies (it replies to everything with the same thing at the 
+   moment)
+ - Optimize (there's a lot of room for that, like, remove std::string)
+ - Write documentation (man pages, win32 chm, so on)
+ - Use SQLite for word databases.
+
+For more, grep the source files for 'TODO'.
