@@ -41,6 +41,7 @@ wstring CMD_Learning_f (class SeeBorg* self, const wstring command);
 wstring CMD_ircHelp_f (class SeeBorg* self, const wstring command);
 
 wstring CMD_Jerk_f (class SeeBorg* self, const wstring command);
+wstring CMD_Nick_f (class SeeBorg* self, const wstring command);
 
 wstring ircParseCommands(const wstring &cmd, const char* who);
 
@@ -62,6 +63,7 @@ static botcommand_t ircbotcmds[] = {
   {L"stealth", L"CTCP version stealth", CMD_Stealth_f},
 
   {L"jerk", L"Hulaughg ghaulhg gauhahug", CMD_Jerk_f},
+  {L"nick", L"Change the nickname of this bot", CMD_Nick_f},
 
   {NULL, NULL, NULL}
 };

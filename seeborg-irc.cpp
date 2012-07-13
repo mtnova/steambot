@@ -647,15 +647,18 @@ wstring ircParseCommands(const wstring &cmd, const char* who) {
   if (cmd[0] != L'!') return L"";
   
   if (!isOwner(who)) return ABORT_HACK;
-  // TODO: remove redundant copy
-  wstring command = cmd;
-  lowerString(command);
 
-  tokenizer_tokenize(botsettings.tokenizer, command.c_str());
+  // TODO: remove redundant copy
+  wstring rawCmd = cmd;
+  tokenizer_tokenize(botsettings.tokenizer, rawCmd.c_str());
+
+  // only lowercase the command itself. don't lowercase the arguments.
+  wstring command = tokenizer_argv(botsettings.tokenizer, 0) + 1;
+  lowerString(command);
 
   for (int i = 0; i < numircbotcmds; i++) {
 	size_t len = wcslen(ircbotcmds[i].command);
-	if (!wcsncmp(tokenizer_argv(botsettings.tokenizer, 0) + 1, ircbotcmds[i].command, len)) {
+	if (!wcsncmp(command.c_str(), ircbotcmds[i].command, len)) {
 	  return ircbotcmds[i].func(&gSeeBorg, cmd);
 	}
   }
@@ -812,6 +815,21 @@ wstring CMD_Learning_f(class SeeBorg* self, const wstring command) {
 
 wstring CMD_Jerk_f (class SeeBorg* self, const wstring command) {
   return L"!jerk";
+}
+
+wstring CMD_Nick_f(class SeeBorg* self, const wstring command) {
+  size_t argc = tokenizer_argc(botsettings.tokenizer);
+  wstring retstr;
+  if (argc < 2) {
+	retstr = L"Nickname is ";
+	retstr += botsettings.nickname;
+	return retstr;
+  }
+  
+  botsettings.nickname = tokenizer_argv(botsettings.tokenizer, 1);
+  retstr = L"/nick ";
+  retstr += botsettings.nickname;
+  return retstr;
 }
 
 
