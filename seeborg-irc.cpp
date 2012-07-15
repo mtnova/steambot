@@ -72,7 +72,14 @@ botsettings_s::botsettings_s() {
   // These are default channels
   channels.push_back(L"#seeborg");
   channels.push_back(L"#test");
-  
+
+  // These commands can be used by anybody
+  globalcommands.insert(L"add");
+  globalcommands.insert(L"quote");
+  globalcommands.insert(L"jerk");
+  globalcommands.insert(L"cake");
+  globalcommands.insert(L"topic");
+
   serverport = 6667;
   autosaveperiod = 600;
 
@@ -646,8 +653,6 @@ char *ProcOnCTCP(BN_PInfo I,const char Who[],const char Whom[],const char Type[]
 wstring ircParseCommands(const wstring &cmd, const char* who) {
   if (cmd[0] != L'!') return L"";
   
-  if (!isOwner(who)) return ABORT_HACK;
-
   // TODO: remove redundant copy
   wstring rawCmd = cmd;
   tokenizer_tokenize(botsettings.tokenizer, rawCmd.c_str());
@@ -655,6 +660,10 @@ wstring ircParseCommands(const wstring &cmd, const char* who) {
   // only lowercase the command itself. don't lowercase the arguments.
   wstring command = tokenizer_argv(botsettings.tokenizer, 0) + 1;
   lowerString(command);
+
+  // Some commands are available for all users.
+  if (botsettings.globalcommands.find(command) == botsettings.globalcommands.end()
+	  && !isOwner(who))	return ABORT_HACK;
 
   for (int i = 0; i < numircbotcmds; i++) {
 	size_t len = wcslen(ircbotcmds[i].command);
@@ -827,9 +836,7 @@ wstring CMD_Nick_f(class SeeBorg* self, const wstring command) {
   }
   
   botsettings.nickname = tokenizer_argv(botsettings.tokenizer, 1);
-  retstr = L"/nick ";
-  retstr += botsettings.nickname;
-  return retstr;
+  return L"";
 }
 
 wstring CMD_Cake_f (class SeeBorg* self, const wstring command) {

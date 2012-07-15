@@ -118,6 +118,8 @@ typedef struct botsettings_s {
 	float           replyrate_magic;
 	vector<wstring> magicwords;
 	vector<wstring> botakas;
+
+	set<wstring>    globalcommands;
 	
 	int             autosaveperiod;
 
