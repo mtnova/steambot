@@ -836,6 +836,58 @@ wstring CMD_Cake_f (class SeeBorg* self, const wstring command) {
   return L"*various Mario, Sonic, Megaman, Zelda, Pokemon, Digimon, Yu-Gi-Oh, Starfox, Kirby, Metroid, Final Fantasy VII, Kingdom Hearts, Megaman X, Dragonball Z, Tenchi Muyo, Sailor Moon, Inuyasha, Hamtaro, Outlaw Star, YuYuHashuko, Cardcaptors, G Gundam, Power Rangers, MST3K, Marvel Comics, and DC Comics characters walk in carrying a HUGE cake*";
 }
 
+wstring CMD_Add_f (class SeeBorg* self, const wstring command) {
+  size_t argc = tokenizer_argc(botsettings.tokenizer);
+  if (argc < 2) {
+	  return L"Usage: !add <quote text>";
+  }
+  
+  wstring quote = command.substr(5);
+  int addedIndex = self->AddQuote(quote);
+
+  wchar_t buffer[1024];
+  if (swprintf(buffer, 1024, L"Quote %d added.", addedIndex) < 0) {
+	  // Some error occurred.
+	  return NULL;
+  }
+
+  return wstring(buffer);
+}
+
+wstring CMD_Quote_f (class SeeBorg* self, const wstring command) {
+  size_t argc = tokenizer_argc(botsettings.tokenizer);
+  if (argc < 2) {
+	  return self->GetQuote();
+  }
+  else {
+      int index = wcstol(tokenizer_argv(botsettings.tokenizer, 1), NULL, 10);
+	  return self->GetQuote(index);
+  }
+}
+
+wstring CMD_Del_f (class SeeBorg* self, const wstring command) {
+  size_t argc = tokenizer_argc(botsettings.tokenizer);
+  if (argc < 2) {
+	  return L"Usage: !del <quote ID>";
+  }
+  else {
+      int index = wcstol(tokenizer_argv(botsettings.tokenizer, 1), NULL, 10);
+	  if (self->DeleteQuote(index) == false) {
+		  // Some error occurred.
+		  return NULL;
+	  }
+	  else {
+		  wchar_t buffer[1024];
+		  if (swprintf(buffer, 1024, L"Quote %d deleted.", index) < 0) {
+			  // Some error occurred.
+			  return NULL;
+		  }
+			
+		  return wstring(buffer);
+	  }
+  }
+}
+
 
 // Main Body
 // ---------------------------------------------------------------------------

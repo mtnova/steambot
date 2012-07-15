@@ -44,6 +44,10 @@ wstring CMD_Jerk_f (class SeeBorg* self, const wstring command);
 wstring CMD_Nick_f (class SeeBorg* self, const wstring command);
 wstring CMD_Cake_f (class SeeBorg* self, const wstring command);
 
+wstring CMD_Add_f (class SeeBorg* self, const wstring command);
+wstring CMD_Quote_f (class SeeBorg* self, const wstring command);
+wstring CMD_Del_f (class SeeBorg* self, const wstring command);
+
 wstring ircParseCommands(const wstring &cmd, const char* who);
 
 static botcommand_t ircbotcmds[] = {
@@ -62,6 +66,10 @@ static botcommand_t ircbotcmds[] = {
   
   {L"learning", L"Enable/disable bot's learning ability, should be enabled", CMD_Learning_f},
   {L"stealth", L"CTCP version stealth", CMD_Stealth_f},
+
+  {L"add", L"Add a quote to the database", CMD_Add_f},
+  {L"quote", L"Retrieve a quote from the database", CMD_Quote_f},
+  {L"del", L"Delete a quote from the database", CMD_Del_f},
 
   {L"jerk", L"Hulaughg ghaulhg gauhahug", CMD_Jerk_f},
   {L"nick", L"Change the nickname of this bot", CMD_Nick_f},

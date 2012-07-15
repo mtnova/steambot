@@ -44,6 +44,7 @@ int FilterMessage(IN OUT wstring &message);
 
 // file/string functions
 int fReadStringLine(IN FILE *f, OUT wstring &outstr);
+int fReadStringQuote(IN FILE *f, OUT int &key, OUT wstring &outstr); 
 
 // Other helpful functions
 inline int randInt(const int min, const int max) {

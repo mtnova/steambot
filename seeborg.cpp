@@ -54,6 +54,25 @@ int SeeBorg::LoadSettings(void) {
 	see_printstring(stdout, L"Parsed %i lines.\n", lines.size());
 	see_printstring(stdout, L"I know %i words (%i contexts, %.2f per word), %i lines.\n", words.size(), 
 		num_contexts, (float)num_contexts/(float)words.size(), lines.size());
+
+	f = fopen ("quotes.txt", "rb");
+	if (f == NULL) {
+		printf ("Not found, creating quotes list.\n");
+		return false;
+	}
+
+	int key;
+	while (fReadStringQuote (f, key, str)) {
+		// Watch out for extra newlines.
+		int endChar = str.length() - 1;
+		if (str[endChar] == L'\n') {
+			str.erase(endChar);
+		}
+		this->AddQuote(key, str);
+	}
+	fclose(f);
+
+	see_printstring(stdout, L"Parsed %i quotes.\n", quotes.size());
 	
 	return true;
 }
@@ -80,7 +99,33 @@ int SeeBorg::SaveSettings(void) {
 	}
 
 	utf8writer_free(utf8writer);
+
+	fclose(f);
+
+	// Save the quotes file.
+	map<int, wstring>::iterator mt;
+	f = fopen ("quotes.txt", "wb");
+	if (f == NULL) {
+		perror("Couldn't save quotes list");
+		return false;
+	}
+
+	utf8writer = utf8writer_init();
+	if (utf8writer == NULL) {
+		// TODO: write error
+		fclose(f);
+		return false;
+	}
+
+	wchar_t buffer[1024];
+	for (mt = quotes.begin(); mt != quotes.end(); ++mt) {
+		// Format the key and value into one string
+		swprintf(buffer, 1024, L"%d,%ls\n", mt->first, mt->second.c_str());
+		utf8writer_write(utf8writer, f, buffer, NULL);
+	}
 	
+	utf8writer_free(utf8writer);
+
 	fclose(f);
 	return true;
 }
@@ -245,6 +290,62 @@ int SeeBorg::LearnLine(const wstring &line) {
 	return true;
 }
 
+int SeeBorg::AddQuote(const wstring quote)
+{
+	// To insert a quote, first we need to find a key.
+	int key = 1;
+	if (quotes.size() != 0) {
+		while (quotes.find(key) != quotes.end()) {
+			key++;
+		}
+	}
+
+	return AddQuote(key, quote);
+}
+
+int SeeBorg::AddQuote(int key, const wstring quote)
+{
+	quotes[key] = quote;
+	return key;
+}
+
+wstring SeeBorg::GetQuote()
+{
+	if (quotes.size() == 0) {
+		return NULL;
+	}
+
+	// Find a random key to use to get a quote.
+	int minKey = quotes.begin()->first;
+	int maxKey = quotes.rbegin()->first;
+
+	int key;
+
+	do
+	{
+		key = rand() % (maxKey - minKey + 1) + minKey;
+	} while (quotes.find(key) == quotes.end());
+
+	return GetQuote(key);
+}
+
+wstring SeeBorg::GetQuote(int index)
+{
+	map<int, wstring>::iterator it = quotes.find(index);
+	if (it == quotes.end())
+	{
+		return L"Invalid quote ID.";
+	}
+
+	return it->second;
+}
+
+int SeeBorg::DeleteQuote(int index)
+{
+	quotes.erase(index);
+	return true;
+}
+
 // ---------------------------------------------------------------------------
 
 wstring SeeBorg::ParseCommands(const wstring &cmd) {
@@ -285,6 +386,15 @@ wstring CMD_Words_f(class SeeBorg* self, wstring command) {
 		self->words.size(), self->num_contexts, 
 		self->num_contexts/(float)self->words.size(),
 		self->lines.size());
+	retstr[4095] = L'\0';
+	return retstr;
+}
+
+wstring CMD_Numquotes_f(class SeeBorg* self, wstring command) {
+	static wchar_t retstr[4096];
+
+	snwprintf (retstr, 4096, L"I know %i quotes.",
+		self->quotes.size());
 	retstr[4095] = L'\0';
 	return retstr;
 }

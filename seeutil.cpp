@@ -204,6 +204,71 @@ int fReadStringLine(IN FILE *f, OUT wstring &str) {
   return true;
 }
 
+// Reads quotes from file until we reach EOF or newline
+// ---
+int fReadStringQuote(IN FILE *f, OUT int &key, OUT wstring &str) {
+  size_t blocksize = 65536;
+  size_t blockoffset = 0;
+  wchar_t *wcstr = NULL;
+  char *s = NULL;
+  int retval;
+  
+  if (f == NULL) return false;
+//  str.erase(0, str.npos);
+  str.clear();
+//  str.resize(0);
+  
+  s = (char*)malloc(blocksize);
+  if (s == NULL) return false; // error;
+  
+  s[blocksize-1] = 104; // if touched by fgets(), we may need more
+  
+  while (1) {
+	if (fscanf (f, "%d,", &key) < 1) {
+	  // An error
+	  if (!feof(f)) perror("Could not read quote ID");
+	  safe_free(s);
+	  return false;
+	}
+
+	if (fgets(s + blockoffset, blocksize - blockoffset, f) == NULL) {
+	  // An error
+	  if (!feof(f)) perror("error reading quotes database");
+	  safe_free(s);
+	  return false;
+	}
+	
+	if (s[blocksize-1] == 104) break;
+	else {
+	  // was touched, probably requires another take
+	  blockoffset = blocksize - 1;
+	  blocksize *= 2;
+	  s = (char*)realloc(s, (blocksize));
+	  s[blocksize-1] = 104;
+	}
+  }
+  
+  // convert from UTF8 to wchar_t
+  retval = utf8_mbstowcs(NULL, s, 0);
+  if (retval < 0) {
+	safe_free(s);
+	return false;
+  }
+  wcstr = (wchar_t*)malloc((retval+1)*sizeof(wchar_t));
+  retval = utf8_mbstowcs(wcstr, s, retval+1);
+  if (retval < 0) {
+	safe_free (wcstr);
+	safe_free (s);
+	return false;
+  }
+  
+  str = wcstr;
+  
+  safe_free(wcstr);
+  safe_free(s);
+  return true;
+}
+
 
 // ========================
 // argument-style tokenizer

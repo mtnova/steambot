@@ -41,6 +41,7 @@ typedef vector<context_t> word_t;
 
 typedef set<wstring> lines_t;
 typedef map<wstring, word_t> words_t;
+typedef map<int, wstring> quotes_t;
 
 class SeeBorg {
 public:
@@ -49,6 +50,12 @@ public:
   
   int Learn(const wstring &body);
   wstring Reply(const wstring message);
+
+  int AddQuote(const wstring quote);
+  int AddQuote(int key, const wstring quote);
+  wstring GetQuote();
+  wstring GetQuote(int index);
+  int DeleteQuote(int index);
   
   int LoadSettings(void);
   int SaveSettings(void);
@@ -59,6 +66,7 @@ public:
 
   lines_t lines;
   words_t words;
+  quotes_t quotes;
   tokenizer_t* tokenizer;
 
 private:
@@ -83,6 +91,7 @@ extern seeborg_t gSeeBorg;
 wstring CMD_Help_f (class SeeBorg* self, const wstring command);
 wstring CMD_Version_f (class SeeBorg* self, const wstring command);
 wstring CMD_Words_f (class SeeBorg* self, const wstring command);
+wstring CMD_Numquotes_f (class SeeBorg* self, const wstring command);
 wstring CMD_Known_f (class SeeBorg* self, const wstring command);
 wstring CMD_Contexts_f (class SeeBorg* self, const wstring command);
 wstring CMD_Unlearn_f (class SeeBorg* self, const wstring command);
@@ -93,6 +102,7 @@ static botcommand_t botcmds[] = {
   {L"help", L"Show this command list", CMD_Help_f},
   {L"version", L"Show SeeBorg version", CMD_Version_f},
   {L"words", L"Show how many words the borg knows", CMD_Words_f},
+  {L"numquotes", L"Show how many quotes the borg knows", CMD_Numquotes_f},
   {L"known", L"Query the bot if the word is known", CMD_Known_f},
 
   {L"contexts", L"Show contexts containing the command argument", CMD_Contexts_f},
