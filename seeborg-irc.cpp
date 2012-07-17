@@ -79,6 +79,7 @@ botsettings_s::botsettings_s() {
   globalcommands.insert(L"jerk");
   globalcommands.insert(L"cake");
   globalcommands.insert(L"topic");
+  globalcommands.insert(L"plop");
 
   serverport = 6667;
   autosaveperiod = 600;
@@ -837,6 +838,10 @@ wstring CMD_Nick_f(class SeeBorg* self, const wstring command) {
   
   botsettings.nickname = tokenizer_argv(botsettings.tokenizer, 1);
   return L"";
+}
+
+wstring CMD_Plop_f(class SeeBorg* self, const wstring command) {
+  return L"¡PLOP!";
 }
 
 wstring CMD_Cake_f (class SeeBorg* self, const wstring command) {

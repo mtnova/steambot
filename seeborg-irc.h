@@ -43,6 +43,7 @@ wstring CMD_ircHelp_f (class SeeBorg* self, const wstring command);
 wstring CMD_Jerk_f (class SeeBorg* self, const wstring command);
 wstring CMD_Nick_f (class SeeBorg* self, const wstring command);
 wstring CMD_Cake_f (class SeeBorg* self, const wstring command);
+wstring CMD_Plop_f (class SeeBorg* self, const wstring command);
 
 wstring CMD_Add_f (class SeeBorg* self, const wstring command);
 wstring CMD_Quote_f (class SeeBorg* self, const wstring command);
@@ -74,6 +75,7 @@ static botcommand_t ircbotcmds[] = {
   {L"jerk", L"Hulaughg ghaulhg gauhahug", CMD_Jerk_f},
   {L"nick", L"Change the nickname of this bot", CMD_Nick_f},
   {L"cake", L"The cake is the truth", CMD_Cake_f},
+  {L"plop", L"Condorito exerts his great influence on you", CMD_Plop_f},
 
   {NULL, NULL, NULL}
 };
